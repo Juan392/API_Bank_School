@@ -26,16 +26,21 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String tokenJWT = recoveryToken(request);
-        if (tokenJWT!=null){
-            String subject = tokenService.getSubject(tokenJWT);
-            Client user = repository.findByEmail(subject).orElseThrow();
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        if (tokenJWT != null) {
+            try {
+                String subject = tokenService.getSubject(tokenJWT);
+                Client user = repository.findByEmail(subject).orElseThrow();
+ 
+                var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+ 
+            } catch (Exception ex) {
+                SecurityContextHolder.clearContext();
+            }
         }
-        filterChain.doFilter(request, response);
-    }
 
     private String recoveryToken (HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization ");
+        String authorizationHeader = request.getHeader("Authorization");
                 if(authorizationHeader != null){
                     return authorizationHeader.replace("Bearer ", "");
                 }
