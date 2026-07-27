@@ -21,7 +21,7 @@ public class TokenService {
     }
 
     private Instant expirationDate(){
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-06:00"));
+        return Instant.now().plus(2, ChronoUnit.HOURS);
     }
 
     public String getSubject(String tokenJWT){
