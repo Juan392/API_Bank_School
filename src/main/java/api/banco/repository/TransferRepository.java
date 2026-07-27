@@ -10,11 +10,11 @@ import java.util.List;
 
 @Repository
 public interface TransferRepository extends JpaRepository<Transfer, Long> {
-    @Query("SELECT new api.banco.dto.transfer.TransferHistoryDTO(t.idTransfer, t.amount, t.transferDate, origen.idClient.name, destino.idClient.name) " +
+   @Query("SELECT new api.banco.dto.transfer.TransferHistoryDTO(t.idTransfer, t.amount, t.transferDate, origen.idClient.name, destino.idClient.name) " +
             "FROM Transfer t " +
             "JOIN t.accountOrigin origen " +
             "JOIN t.accountDestiny destino " +
             "WHERE origen.idAccount = :accountId OR destino.idAccount = :accountId " +
             "ORDER BY t.transferDate DESC")
-    List<TransferHistoryDTO> searchMovesWithJoin(Long id);
+    List<TransferHistoryDTO> searchMovesWithJoin(@Param("accountId") Long id);
 }
