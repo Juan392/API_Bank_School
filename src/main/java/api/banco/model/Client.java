@@ -1,6 +1,5 @@
 package api.banco.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,13 +21,23 @@ import java.util.List;
 public class Client implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_client")
     private Long idClient;
-    @Column(unique = true)
+
+    @Column(nullable = false, length = 100)
     private String name;
+
+    @Column(unique = true, nullable = false, length = 100)
     private String email;
-    @Column(name = "password_hash")
+
+    @Column(name = "password_hash", nullable = false)
     private String password;
 
+    public Client(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -42,12 +51,12 @@ public class Client implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override

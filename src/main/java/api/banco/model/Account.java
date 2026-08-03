@@ -17,12 +17,26 @@ import java.math.BigDecimal;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_account")
     private Long idAccount;
-    @ManyToOne
-    @JoinColumn(name = "id_client")
-    private Client idClient;
-    @Column(name = "account_number", unique = true, nullable = false)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_client", nullable = false)
+    private Client client;
+
+    @Column(name = "account_number", unique = true, nullable = false, length = 20)
     private String accountNumber;
+
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal balance;
-    private boolean isActive;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
+
+    public Account(Client client, String accountNumber, BigDecimal balance, boolean isActive) {
+        this.client = client;
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.isActive = isActive;
+    }
 }

@@ -18,14 +18,27 @@ import java.time.LocalDateTime;
 public class Transfer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_transfer")
     private Long idTransfer;
-    @ManyToOne
-    @JoinColumn(name = "id_account_origin")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_account_origin", nullable = false)
     private Account accountOrigin;
-    @ManyToOne
-    @JoinColumn(name = "id_account_destiny")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_account_destiny", nullable = false)
     private Account accountDestiny;
+
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal amount;
+
     @Column(name = "transaction_date")
-    private LocalDateTime transferDate;
+    private LocalDateTime transferDate = LocalDateTime.now();
+
+    public Transfer(Account accountOrigin, Account accountDestiny, BigDecimal amount, LocalDateTime transferDate) {
+        this.accountOrigin = accountOrigin;
+        this.accountDestiny = accountDestiny;
+        this.amount = amount;
+        this.transferDate = transferDate;
+    }
 }
